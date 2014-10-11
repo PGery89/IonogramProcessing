@@ -87,7 +87,6 @@ void MainWindow::SetFilteredExtraordinaryDataScatter()
 
 void MainWindow::SetXAxis()
 {
-    //comment
     ui->widget->xAxis->setBasePen(QPen(Qt::white, 1));
     ui->widget->xAxis->setTickPen(QPen(Qt::white, 1));
     ui->widget->xAxis->setSubTickPen(QPen(Qt::white, 1));
@@ -110,7 +109,6 @@ void MainWindow::SetYAxis()
     ui->widget->yAxis->setLabelColor(Qt::white);
     ui->widget->yAxis->setLabel("Virtual Height");
     ui->widget->yAxis->setTickLabels(false);
-
 
     ui->widget->yAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
     ui->widget->yAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
@@ -144,12 +142,10 @@ void MainWindow::SetPlot()
     SetFilteredOrdinaryDataScatter();
     SetFilteredExtraordinaryDataScatter();
 
-    //zoom range signal to slot
+    //zoom range signal to slot, or MAXVALUE??
     connect(ui->widget->xAxis, SIGNAL(rangeChanged(QCPRange)), this, SLOT(plotRangeChangedX(QCPRange)));
     connect(ui->widget->yAxis, SIGNAL(rangeChanged(QCPRange)), this, SLOT(plotRangeChangedY(QCPRange)));
 
-    // Note: we could have also just called customPlot->rescaleAxes(); instead
-    // Allow user to drag axis ranges with mouse, zoom with mouse wheel and select graphs by clicking:
     ui->widget->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom );
 }
 
