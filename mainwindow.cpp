@@ -85,7 +85,8 @@ void MainWindow::SetFilteredExtraordinaryDataScatter()
     ui->widget->graph(3)->setName("FilteredExtraordinary");
 }
 
-void MainWindow::SetXAxis()
+//black themed
+void MainWindow::SetDefaultXAxis()
 {
     ui->widget->xAxis->setBasePen(QPen(Qt::white, 1));
     ui->widget->xAxis->setTickPen(QPen(Qt::white, 1));
@@ -100,7 +101,7 @@ void MainWindow::SetXAxis()
     ui->widget->xAxis->grid()->setSubGridVisible(false);
 }
 
-void MainWindow::SetYAxis()
+void MainWindow::SetDefaultYAxis()
 {
     ui->widget->yAxis->setBasePen(QPen(Qt::white, 1));
     ui->widget->yAxis->setTickPen(QPen(Qt::white, 1));
@@ -115,7 +116,7 @@ void MainWindow::SetYAxis()
     ui->widget->yAxis->grid()->setSubGridVisible(false);
 }
 
-void MainWindow::SetBackgrounds()
+void MainWindow::SetDefaultBackgrounds()
 {
     QLinearGradient plotGradient;
     plotGradient.setStart(0, 0);
@@ -132,11 +133,36 @@ void MainWindow::SetBackgrounds()
     ui->widget->axisRect()->setBackground(axisRectGradient);
 }
 
+//white themed
+void MainWindow::SetWhiteThemedXAxis()
+{
+    ui->widget->xAxis->setBasePen(QPen(Qt::black, 1));
+    ui->widget->xAxis->setTickPen(QPen(Qt::black, 1));
+    ui->widget->xAxis->setSubTickPen(QPen(Qt::black, 1));
+    ui->widget->xAxis->setTickLabelColor(Qt::black);
+    ui->widget->xAxis->setLabelColor(Qt::black);
+}
+
+void MainWindow::SetWhiteThemedYAxis()
+{
+    ui->widget->yAxis->setBasePen(QPen(Qt::black, 1));
+    ui->widget->yAxis->setTickPen(QPen(Qt::black, 1));
+    ui->widget->yAxis->setSubTickPen(QPen(Qt::black, 1));
+    ui->widget->yAxis->setTickLabelColor(Qt::black);
+    ui->widget->yAxis->setLabelColor(Qt::black);
+}
+
+void MainWindow::SetWhiteThemedBackgrounds()
+{
+    ui->widget->setBackground(Qt::white);
+    ui->widget->axisRect()->setBackground(Qt::white);
+}
+
 void MainWindow::SetPlot()
 {
-    SetBackgrounds();
-    SetXAxis();
-    SetYAxis();
+    SetDefaultBackgrounds();
+    SetDefaultXAxis();
+    SetDefaultYAxis();
     SetOrdinaryDataScatter();
     SetExtraordinaryDataScatter();
     SetFilteredOrdinaryDataScatter();
@@ -258,14 +284,20 @@ void MainWindow::on_pushButton_clicked()
 }
 
 //Theme radio buttons
-void MainWindow::on_radioButton_toggled(bool checked)
+void MainWindow::on_radioButton_blackTheme_toggled(bool checked)
 {
-    //TODO csinálni fehér és fekete initeket vagy paraméterezni az initeket színekkel
+    SetDefaultXAxis();
+    SetDefaultYAxis();
+    SetDefaultBackgrounds();
+    ui->widget->replot();
 }
 
-void MainWindow::on_radioButton_2_toggled(bool checked)
+void MainWindow::on_radioButton_whiteTheme_toggled(bool checked)
 {
-    //TODO same.
+    SetWhiteThemedBackgrounds();
+    SetWhiteThemedXAxis();
+    SetWhiteThemedYAxis();
+    ui->widget->replot();
 }
 
 //Component radio buttons

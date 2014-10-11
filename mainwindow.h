@@ -34,13 +34,18 @@ public:
      void SetFilteredOrdinaryDataScatter();
      void SetFilteredExtraordinaryDataScatter();
      void SetPlot();
-     void SetXAxis();
-     void SetYAxis();
-     void SetBackgrounds();
+     void SetDefaultXAxis();
+     void SetDefaultYAxis();
+     void SetDefaultBackgrounds();
+     void SetWhiteThemedXAxis();
+     void SetWhiteThemedYAxis();
+     void SetWhiteThemedBackgrounds();
 
 private slots:
     void on_actionOpen_Ionogram_triggered();
+
     void plotRangeChangedX(const QCPRange & newRange);
+
     void plotRangeChangedY(const QCPRange & newRange);
 
     void on_pushButton_clicked();
@@ -57,9 +62,9 @@ private slots:
 
     void on_actionCCL_filtering_triggered();
 
-    void on_radioButton_toggled(bool checked);
+    void on_radioButton_blackTheme_toggled(bool checked);
 
-    void on_radioButton_2_toggled(bool checked);
+    void on_radioButton_whiteTheme_toggled(bool checked);
 
 private:
     Ui::MainWindow *ui;
