@@ -26,15 +26,9 @@ void MainWindow::SetOrdinaryDataScatter()
     ui->widget->addGraph();
     ui->widget->graph(0)->setPen(QPen(Qt::green));
     ui->widget->graph(0)->setLineStyle(QCPGraph::lsNone);
-
-    QCPScatterStyle ordinaryDataScatter;
-    ordinaryDataScatter.setShape(QCPScatterStyle::ssSquare);
-    ordinaryDataScatter.setPen(QPen(Qt::green));
-    ordinaryDataScatter.setBrush(Qt::green);
-    ordinaryDataScatter.setSize(1);
-
-    ui->widget->graph(0)->setScatterStyle(ordinaryDataScatter);
+    ui->widget->graph(0)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssSquare, QPen(Qt::green), (Qt::green), 1));
     ui->widget->graph(0)->setName("Ordinary");
+    ui->widget->graph(0)->setVisible(false);
 }
 
 void MainWindow::SetExtraordinaryDataScatter()
@@ -42,15 +36,9 @@ void MainWindow::SetExtraordinaryDataScatter()
     ui->widget->addGraph();
     ui->widget->graph(1)->setPen(QPen(Qt::red));
     ui->widget->graph(1)->setLineStyle(QCPGraph::lsNone);
-
-    QCPScatterStyle extraordinaryDataScatter;
-    extraordinaryDataScatter.setShape(QCPScatterStyle::ssSquare);
-    extraordinaryDataScatter.setPen(QPen(Qt::red));
-    extraordinaryDataScatter.setBrush(Qt::red);
-    extraordinaryDataScatter.setSize(1);
-
-    ui->widget->graph(1)->setScatterStyle(extraordinaryDataScatter);
+    ui->widget->graph(1)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssSquare, QPen(Qt::red), (Qt::red), 1));
     ui->widget->graph(1)->setName("Extraordinary");
+    ui->widget->graph(1)->setVisible(false);
 }
 
 void MainWindow::SetFilteredOrdinaryDataScatter()
@@ -58,15 +46,9 @@ void MainWindow::SetFilteredOrdinaryDataScatter()
     ui->widget->addGraph();
     ui->widget->graph(2)->setPen(QPen(Qt::white));
     ui->widget->graph(2)->setLineStyle(QCPGraph::lsNone);
-
-    QCPScatterStyle filteredOrdScatter;
-    filteredOrdScatter.setShape(QCPScatterStyle::ssSquare);
-    filteredOrdScatter.setPen(QPen(Qt::white));
-    filteredOrdScatter.setBrush(Qt::white);
-    filteredOrdScatter.setSize(2);
-
-    ui->widget->graph(2)->setScatterStyle(filteredOrdScatter);
+    ui->widget->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssSquare, QPen(Qt::white), (Qt::white), 2));
     ui->widget->graph(2)->setName("FilteredOrdinary");
+    ui->widget->graph(2)->setVisible(false);
 }
 
 void MainWindow::SetFilteredExtraordinaryDataScatter()
@@ -74,15 +56,9 @@ void MainWindow::SetFilteredExtraordinaryDataScatter()
     ui->widget->addGraph();
     ui->widget->graph(3)->setPen(QPen(Qt::blue));
     ui->widget->graph(3)->setLineStyle(QCPGraph::lsNone);
-
-    QCPScatterStyle filteredXOScatter;
-    filteredXOScatter.setShape(QCPScatterStyle::ssSquare);
-    filteredXOScatter.setPen(QPen(Qt::blue));
-    filteredXOScatter.setBrush(Qt::blue);
-    filteredXOScatter.setSize(2);
-
-    ui->widget->graph(3)->setScatterStyle(filteredXOScatter);
+    ui->widget->graph(3)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssSquare, QPen(Qt::blue), (Qt::blue), 2));
     ui->widget->graph(3)->setName("FilteredExtraordinary");
+    ui->widget->graph(3)->setVisible(false);
 }
 
 //black themed
@@ -202,8 +178,10 @@ void MainWindow::on_actionOpen_Ionogram_triggered()
 
     ui->widget->graph(0)->setData(x1, y1);
     ui->widget->graph(0)->rescaleAxes();
+    ui->widget->graph(0)->setVisible(true);
     ui->widget->graph(1)->setData(x2, y2);
     ui->widget->graph(1)->rescaleAxes();
+    ui->widget->graph(1)->setVisible(true);
     ui->widget->replot();
 
     ui->groupBox_components->setEnabled(true);
@@ -257,38 +235,13 @@ void MainWindow::plotRangeChangedY(const QCPRange &newRange)
     ui->widget->yAxis->setRange(boundedRange);
 }
 
-void MainWindow::on_pushButton_clicked()
-{
-    if(ionogram.ionogram.empty())
-    {
-        QMessageBox::warning(this, tr("Warning"), "There is no previously loaded ionogram!");
-    }
-    else
-    {
-        ionogram.ComponentLabelingFor(1);
-
-        QVector<double> x2, y2;
-        x2 = ionogram.GetLabeledX(1, 80);
-        y2 = ionogram.GetLabeledY(1, 80);
-
-        upperXRangeBound = ionogram.ionogram.size();
-        upperYRangeBound = ionogram.ionogram[0].size();
-
-        ui->widget->graph(1)->setVisible(false);
-
-        ui->widget->graph(2)->setData(x2, y2);
-        ui->widget->graph(2)->rescaleAxes();
-        ui->widget->graph(2)->setVisible(true);
-        ui->widget->replot();
-    }
-}
-
 //Theme radio buttons
 void MainWindow::on_radioButton_blackTheme_toggled(bool checked)
 {
     SetDefaultXAxis();
     SetDefaultYAxis();
     SetDefaultBackgrounds();
+    ui->widget->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssSquare, QPen(Qt::white), (Qt::white), 2));
     ui->widget->replot();
 }
 
@@ -297,6 +250,7 @@ void MainWindow::on_radioButton_whiteTheme_toggled(bool checked)
     SetWhiteThemedBackgrounds();
     SetWhiteThemedXAxis();
     SetWhiteThemedYAxis();
+    ui->widget->graph(2)->setScatterStyle(QCPScatterStyle(QCPScatterStyle::ssSquare, QPen(Qt::black), (Qt::black), 2));
     ui->widget->replot();
 }
 
@@ -331,8 +285,8 @@ void MainWindow::on_xCompRadioButton_toggled(bool checked)
 //Filtered radio buttons
 void MainWindow::on_oFilterRadioButton_toggled(bool checked)
 {
-    ui->widget->graph(0)->setVisible(!checked);
-    ui->widget->graph(1)->setVisible(checked);
+    ui->widget->graph(0)->setVisible(checked);
+    ui->widget->graph(1)->setVisible(!checked);
     ui->widget->graph(2)->setVisible(checked);
     ui->widget->graph(3)->setVisible(!checked);
     ui->widget->replot();
@@ -340,8 +294,8 @@ void MainWindow::on_oFilterRadioButton_toggled(bool checked)
 
 void MainWindow::on_xFilterRadioButton_toggled(bool checked)
 {
-    ui->widget->graph(0)->setVisible(checked);
-    ui->widget->graph(1)->setVisible(!checked);
+    ui->widget->graph(0)->setVisible(!checked);
+    ui->widget->graph(1)->setVisible(checked);
     ui->widget->graph(2)->setVisible(!checked);
     ui->widget->graph(3)->setVisible(checked);
     ui->widget->replot();
@@ -350,6 +304,32 @@ void MainWindow::on_xFilterRadioButton_toggled(bool checked)
 //Filter menu, CCL filtering
 void MainWindow::on_actionCCL_filtering_triggered()
 {
-    cclLabelingUi = new labeling_dialog(this);
-    cclLabelingUi->show();
+    if(ionogram.ionogram.empty())
+    {
+        QMessageBox::warning(this, tr("Warning"), "There is no previously imported ionogram!");
+    }
+    else
+    {
+        cclLabelingUi = new labeling_dialog(this);
+        if (cclLabelingUi->exec() == QDialog::Accepted) {
+            ionogram.ComponentLabelingFor(cclLabelingUi->GetComponentIndex());
+
+            //get filtered data
+            QVector<double> x, y;
+            x = ionogram.GetLabeledX(cclLabelingUi->GetComponentIndex(), cclLabelingUi->GetThreshold());
+            y = ionogram.GetLabeledY(cclLabelingUi->GetComponentIndex(), cclLabelingUi->GetThreshold());
+
+            ui->widget->graph(0)->setVisible(false);
+            ui->widget->graph(1)->setVisible(false);
+            ui->widget->graph(2)->setVisible(false);
+            ui->widget->graph(3)->setVisible(false);
+
+            //set filtered data
+            ui->widget->graph(cclLabelingUi->GetComponentIndex() + 1)->setData(x, y);
+            ui->widget->graph(cclLabelingUi->GetComponentIndex() + 1)->setVisible(true);
+            ui->widget->replot();
+
+            ui->groupBox_labeled->setEnabled(true);
+        }
+    }
 }

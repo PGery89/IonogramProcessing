@@ -48,8 +48,6 @@ private slots:
 
     void plotRangeChangedY(const QCPRange & newRange);
 
-    void on_pushButton_clicked();
-
     void on_oxCompRadioButton_toggled(bool checked);
 
     void on_oCompRadioButton_toggled(bool checked);

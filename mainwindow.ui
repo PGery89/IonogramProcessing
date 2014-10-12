@@ -32,21 +32,8 @@
        <x>10</x>
        <y>20</y>
        <width>751</width>
-       <height>521</height>
+       <height>551</height>
       </rect>
-     </property>
-    </widget>
-    <widget class="QPushButton" name="pushButton">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>550</y>
-       <width>75</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Filter</string>
      </property>
     </widget>
    </widget>
@@ -138,6 +125,9 @@
      <property name="title">
       <string>Labeled</string>
      </property>
+     <property name="checkable">
+      <bool>false</bool>
+     </property>
      <widget class="QRadioButton" name="oFilterRadioButton">
       <property name="enabled">
        <bool>false</bool>
@@ -162,12 +152,12 @@
        <rect>
         <x>10</x>
         <y>40</y>
-        <width>82</width>
+        <width>91</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Extraordiray</string>
+       <string>Extraordinary</string>
       </property>
       <property name="checkable">
        <bool>true</bool>
