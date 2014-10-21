@@ -1,9 +1,11 @@
 #ifndef IONOGRAM_H
 #define IONOGRAM_H
 
+#include <QtCore>
 #include <QVector>
 #include <iostream>
 #include <vector>
+#include <math.h>
 
 #include "point.h"
 #include "csv.h"
@@ -17,6 +19,8 @@ public:
 
     QVector< double > GetX(int layer);
     QVector< double > GetY(int layer);
+    QVector< double > GetXTickLabels();
+    QVector< double > GetYTickLabels();
     QVector< double > GetLabeledX(int layer, int treshold);
     QVector< double > GetLabeledY(int layer, int treshold);
     bool IsLabeled(int layer);
@@ -31,8 +35,13 @@ private:
     std::vector< int > GetLabelsCount(int layer);
     void SetIsLabeled(int layer);
 
+    int GetVirtualHeight(int h);
+
     bool ordComp, exordComp;
     ComponentLabeling componentLabeling;
+
+    static const int CC = 299792458;
+    static const double deltaT = 0.000005;
 };
 
 #endif // IONOGRAM_H

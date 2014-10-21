@@ -54,6 +54,7 @@ QVector< double > Ionogram::GetX(int layer)
     for (unsigned int i = 1; i < ionogram.size() - 1; ++i) {
         for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j) {
             if (ionogram[i][j].Layer() == layer) {
+                //x.push_back(GetVirtualHeight(i));
                 x.push_back(i);
             }
             }
@@ -69,11 +70,43 @@ QVector< double > Ionogram::GetY(int layer)
     for (unsigned int i = 1; i < ionogram.size() - 1; ++i) {
         for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j) {
             if (ionogram[i][j].Layer() == layer) {
+                //y.push_back(1000 + (j-1) * 25);
                 y.push_back(j);
             }
             }
     }
 
+    return y;
+}
+
+int Ionogram::GetVirtualHeight(int h)
+{
+    double height = ((double)h * CC * deltaT)/2.0;
+
+    if (height < 0) {
+        qDebug( )<< "h param, height: " << h << height;
+    }
+
+    return round(height);
+}
+
+QVector< double > Ionogram::GetXTickLabels()
+{
+    QVector< double > x;
+    for (unsigned int j = 1; j < ionogram.size() - 1; ++j)
+    {
+        x.push_back(1000 + (j - 1) * 25);
+    }
+    return x;
+}
+
+QVector< double > Ionogram::GetYTickLabels()
+{
+    QVector< double > y;
+    for (unsigned int i = 1; i < ionogram[1].size() - 1; ++i)
+    {
+        y.push_back(GetVirtualHeight(i)/1000);
+    }
     return y;
 }
 
@@ -112,6 +145,7 @@ std::vector < Point > Ionogram::GetNullRow(int column)
     return row;
 }
 
+//test version method
 void Ionogram::GetLabelsCount(int layer, std::vector< int > &labels)
 {
     int size = componentLabeling.ds.CountSets();
@@ -214,14 +248,7 @@ QVector< double > Ionogram::GetLabeledY(int layer, int treshold)
 
 bool Ionogram::IsLabeled(int layer)
 {
-    if (layer < 1 || layer > 2) {
-        QMessageBox msg;
-        msg.setIcon(QMessageBox::Warning);
-        msg.setText("False attribute!");
-        msg.setInformativeText("Layer 1 and 2 can be filtered!");
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.exec();
-    } else if (layer == 1) {
+    if (layer == 1) {
         return ordComp;
     } else {
         return exordComp;

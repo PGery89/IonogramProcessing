@@ -8,19 +8,47 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     InitGraphicsScene();
+    InitSettingsGroupbox();
     SetPlot();
+
+    //test
+    //ui->lineEdit_fmin->installEventFilter(this);
 }
+
+/*bool MainWindow::eventFilter(QObject *target, QEvent *event)
+{
+    if (target == ui->lineEdit_fmin) {
+            if (event->type() == QEvent::MouseButtonPress) {
+                QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+                if (keyEvent->key() == Qt::Key_Space) {
+                    focusNextChild();
+                    qDebug( ) << "Click on fmin";
+                    return true;
+                }
+                qDebug( ) << "Click on fmin";
+                return true;
+            }
+        }
+    return MainWindow::eventFilter(target, event);
+}*/
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+//init qcustomplot
 void MainWindow::InitGraphicsScene()
 {
     scene = new QGraphicsScene(this);
 }
 
+void MainWindow::InitSettingsGroupbox()
+{
+    ui->groupBox_layers->setEnabled(false);
+}
+
+//set graphs
 void MainWindow::SetOrdinaryDataScatter()
 {
     ui->widget->addGraph();
@@ -61,34 +89,64 @@ void MainWindow::SetFilteredExtraordinaryDataScatter()
     ui->widget->graph(3)->setVisible(false);
 }
 
-//black themed
+void MainWindow::SetAllGraphEnabled(bool enabled)
+{
+    ui->widget->graph(0)->setVisible(enabled);
+    ui->widget->graph(1)->setVisible(enabled);
+    ui->widget->graph(2)->setVisible(enabled);
+    ui->widget->graph(3)->setVisible(enabled);
+}
+
+//black theme
 void MainWindow::SetDefaultXAxis()
 {
+    ui->widget->xAxis->setLabel("MHz");
+    ui->widget->xAxis->setLabelColor(Qt::white);
+
+    ui->widget->xAxis->setAutoTicks(false);
+    ui->widget->xAxis->setAutoSubTicks(true);
+    ui->widget->xAxis->setAutoTickLabels(true);
+    ui->widget->xAxis->setTickLabels(true);
+    ui->widget->xAxis->setTickLabelColor(Qt::white);
+
+    QVector< double > vec;
+    for (int i = 0; i < 19; ++i) {
+        vec.push_back(i);
+    }
+    ui->widget->xAxis->setTickVector(vec);
+    ui->widget->xAxis->setRange(0, 18);
+
     ui->widget->xAxis->setBasePen(QPen(Qt::white, 1));
     ui->widget->xAxis->setTickPen(QPen(Qt::white, 1));
     ui->widget->xAxis->setSubTickPen(QPen(Qt::white, 1));
-    ui->widget->xAxis->setTickLabelColor(Qt::white);
-    ui->widget->xAxis->setLabelColor(Qt::white);
-    ui->widget->xAxis->setLabel("MHz");
-    ui->widget->xAxis->setTickLabels(false);
 
     ui->widget->xAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
-    ui->widget->xAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
     ui->widget->xAxis->grid()->setSubGridVisible(false);
 }
 
 void MainWindow::SetDefaultYAxis()
 {
+    ui->widget->yAxis->setLabel("Virtual Height");
+    ui->widget->yAxis->setLabelColor(Qt::white);
+
+    ui->widget->yAxis->setAutoTicks(false);
+    ui->widget->yAxis->setAutoSubTicks(false);
+    ui->widget->yAxis->setAutoTickLabels(true);
+    ui->widget->yAxis->setTickLabels(true);
+    ui->widget->yAxis->setTickLabelColor(Qt::white);
+
+    QVector< double > vec;
+    for (int i = 0; i < 18; ++i) {
+        vec.push_back(i * 50);
+    }
+    ui->widget->yAxis->setTickVector(vec);
+    ui->widget->yAxis->setRange(0, 800);
+
     ui->widget->yAxis->setBasePen(QPen(Qt::white, 1));
     ui->widget->yAxis->setTickPen(QPen(Qt::white, 1));
     ui->widget->yAxis->setSubTickPen(QPen(Qt::white, 1));
-    ui->widget->yAxis->setTickLabelColor(Qt::white);
-    ui->widget->yAxis->setLabelColor(Qt::white);
-    ui->widget->yAxis->setLabel("Virtual Height");
-    ui->widget->yAxis->setTickLabels(false);
 
     ui->widget->yAxis->grid()->setPen(QPen(QColor(140, 140, 140), 1, Qt::DotLine));
-    ui->widget->yAxis->grid()->setSubGridPen(QPen(QColor(80, 80, 80), 1, Qt::DotLine));
     ui->widget->yAxis->grid()->setSubGridVisible(false);
 }
 
@@ -100,16 +158,17 @@ void MainWindow::SetDefaultBackgrounds()
     plotGradient.setColorAt(0, QColor(50, 50, 50));
     plotGradient.setColorAt(1, QColor(30, 30, 30));
     ui->widget->setBackground(plotGradient);
+
     QLinearGradient axisRectGradient;
     axisRectGradient.setStart(0, 0);
     axisRectGradient.setFinalStop(0, 350);
     axisRectGradient.setColorAt(0, QColor(50, 50, 50));
-    axisRectGradient.setColorAt(1, QColor(20, 20, 20));
-    axisRectGradient.setColorAt(2, QColor(10, 10, 10));
+    axisRectGradient.setColorAt(0.5, QColor(20, 20, 20));
+    axisRectGradient.setColorAt(1, QColor(10, 10, 10));
     ui->widget->axisRect()->setBackground(axisRectGradient);
 }
 
-//white themed
+//white theme
 void MainWindow::SetWhiteThemedXAxis()
 {
     ui->widget->xAxis->setBasePen(QPen(Qt::black, 1));
@@ -134,6 +193,7 @@ void MainWindow::SetWhiteThemedBackgrounds()
     ui->widget->axisRect()->setBackground(Qt::white);
 }
 
+//set plot
 void MainWindow::SetPlot()
 {
     SetDefaultBackgrounds();
@@ -144,13 +204,26 @@ void MainWindow::SetPlot()
     SetFilteredOrdinaryDataScatter();
     SetFilteredExtraordinaryDataScatter();
 
-    //zoom range signal to slot, or MAXVALUE??
+    //lines
+    /*QCPItemLine *line = new QCPItemLine(ui->widget);
+    line->setPen(QPen(Qt::yellow));
+    line->start->setCoords(QCPRange::minRange, 100);
+    line->end->setCoords(QCPRange::maxRange, 100);
+
+    QCPItemLine *line2 = new QCPItemLine(ui->widget);
+    line2->setPen(QPen(Qt::yellow));
+    line2->start->setCoords(100, QCPRange::minRange);
+    line2->end->setCoords(100, QCPRange::maxRange);*/
+
     connect(ui->widget->xAxis, SIGNAL(rangeChanged(QCPRange)), this, SLOT(plotRangeChangedX(QCPRange)));
     connect(ui->widget->yAxis, SIGNAL(rangeChanged(QCPRange)), this, SLOT(plotRangeChangedY(QCPRange)));
+    connect(ui->widget, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(onPlotClick(QMouseEvent*)));
 
     ui->widget->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom );
 }
 
+
+//open menu
 void MainWindow::on_actionOpen_Ionogram_triggered()
 {
     //ellenőrizni, hogy van-e visszatérési érték a file-ba...
@@ -170,27 +243,33 @@ void MainWindow::on_actionOpen_Ionogram_triggered()
     upperXRangeBound = ionogram.ionogram.size();
     upperYRangeBound = ionogram.ionogram[0].size();
 
-    QVector<double> x1, y1, x2, y2;
-    x1 = ionogram.GetX(1);
-    y1 = ionogram.GetY(1);
-    x2 = ionogram.GetX(2);
-    y2 = ionogram.GetY(2);
+    QVector< double > v1, v2;
+    v1 = ionogram.GetXTickLabels();
+    v2 = ionogram.GetYTickLabels();
 
-    ui->widget->graph(0)->setData(x1, y1);
+    ui->widget->xAxis->setTickVector(v1);
+    ui->widget->xAxis->setRange(0, v1[v1.length() - 1]);
+    ui->widget->yAxis->setTickVector(v2);
+    ui->widget->yAxis->setRange(0, v2[v2.length() - 1]);
+
+    ui->widget->graph(0)->setData(ionogram.GetX(1), ionogram.GetY(1));
     ui->widget->graph(0)->rescaleAxes();
     ui->widget->graph(0)->setVisible(true);
-    ui->widget->graph(1)->setData(x2, y2);
+
+    ui->widget->graph(1)->setData(ionogram.GetX(2), ionogram.GetY(2));
     ui->widget->graph(1)->rescaleAxes();
     ui->widget->graph(1)->setVisible(true);
     ui->widget->replot();
 
-    ui->groupBox_components->setEnabled(true);
+    ui->groupBox_layers->setEnabled(true);
+    ui->checkBox_ordinary->setChecked(true);
+    ui->checkBox_extraordinary->setChecked(true);
 }
 
 void MainWindow::plotRangeChangedX(const QCPRange &newRange)
 {
     QCPRange boundedRange = newRange;
-    double lowerRangeBound = 0;    
+    double lowerRangeBound = 0;
     if (boundedRange.size() > upperXRangeBound-lowerRangeBound)
     {
       boundedRange = QCPRange(lowerRangeBound, upperXRangeBound);
@@ -235,6 +314,13 @@ void MainWindow::plotRangeChangedY(const QCPRange &newRange)
     ui->widget->yAxis->setRange(boundedRange);
 }
 
+void MainWindow::onPlotClick(QMouseEvent *mouse)
+{
+    int x = ui->widget->xAxis->pixelToCoord(mouse->pos().x());
+    int y = ui->widget->yAxis->pixelToCoord(mouse->pos().y());
+    qDebug( )<< "pixelToCoord:  "<< x << y;
+}
+
 //Theme radio buttons
 void MainWindow::on_radioButton_blackTheme_toggled(bool checked)
 {
@@ -254,49 +340,27 @@ void MainWindow::on_radioButton_whiteTheme_toggled(bool checked)
     ui->widget->replot();
 }
 
-//Component radio buttons
-void MainWindow::on_oxCompRadioButton_toggled(bool checked)
+//layers checkboxes
+void MainWindow::on_checkBox_ordinary_toggled(bool checked)
 {
     ui->widget->graph(0)->setVisible(checked);
+    ui->widget->replot();
+}
+
+void MainWindow::on_checkBox_extraordinary_toggled(bool checked)
+{
     ui->widget->graph(1)->setVisible(checked);
-    ui->widget->graph(2)->setVisible(!checked);
-    ui->widget->graph(3)->setVisible(!checked);
     ui->widget->replot();
 }
 
-void MainWindow::on_oCompRadioButton_toggled(bool checked)
+void MainWindow::on_checkBox_labeledOrdinary_toggled(bool checked)
 {
-    ui->widget->graph(0)->setVisible(checked);
-    ui->widget->graph(1)->setVisible(!checked);
-    ui->widget->graph(2)->setVisible(!checked);
-    ui->widget->graph(3)->setVisible(!checked);
-    ui->widget->replot();
-}
-
-void MainWindow::on_xCompRadioButton_toggled(bool checked)
-{
-    ui->widget->graph(0)->setVisible(!checked);
-    ui->widget->graph(1)->setVisible(checked);
-    ui->widget->graph(2)->setVisible(!checked);
-    ui->widget->graph(3)->setVisible(!checked);
-    ui->widget->replot();
-}
-
-//Filtered radio buttons
-void MainWindow::on_oFilterRadioButton_toggled(bool checked)
-{
-    ui->widget->graph(0)->setVisible(checked);
-    ui->widget->graph(1)->setVisible(!checked);
     ui->widget->graph(2)->setVisible(checked);
-    ui->widget->graph(3)->setVisible(!checked);
     ui->widget->replot();
 }
 
-void MainWindow::on_xFilterRadioButton_toggled(bool checked)
+void MainWindow::on_checkBox_labeledExtraordinary_toggled(bool checked)
 {
-    ui->widget->graph(0)->setVisible(!checked);
-    ui->widget->graph(1)->setVisible(checked);
-    ui->widget->graph(2)->setVisible(!checked);
     ui->widget->graph(3)->setVisible(checked);
     ui->widget->replot();
 }
@@ -319,17 +383,19 @@ void MainWindow::on_actionCCL_filtering_triggered()
             x = ionogram.GetLabeledX(cclLabelingUi->GetComponentIndex(), cclLabelingUi->GetThreshold());
             y = ionogram.GetLabeledY(cclLabelingUi->GetComponentIndex(), cclLabelingUi->GetThreshold());
 
-            ui->widget->graph(0)->setVisible(false);
-            ui->widget->graph(1)->setVisible(false);
-            ui->widget->graph(2)->setVisible(false);
-            ui->widget->graph(3)->setVisible(false);
+            SetAllGraphEnabled(false);
 
             //set filtered data
             ui->widget->graph(cclLabelingUi->GetComponentIndex() + 1)->setData(x, y);
             ui->widget->graph(cclLabelingUi->GetComponentIndex() + 1)->setVisible(true);
             ui->widget->replot();
 
-            ui->groupBox_labeled->setEnabled(true);
         }
     }
+}
+
+
+void MainWindow::on_actionExit_triggered()
+{
+    close();
 }

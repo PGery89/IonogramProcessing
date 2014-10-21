@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>931</width>
+    <width>1064</width>
     <height>639</height>
    </rect>
   </property>
@@ -19,7 +19,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>771</width>
+      <width>781</width>
       <height>581</height>
      </rect>
     </property>
@@ -43,52 +43,36 @@
     </property>
     <property name="geometry">
      <rect>
-      <x>800</x>
+      <x>920</x>
       <y>10</y>
-      <width>121</width>
+      <width>131</width>
       <height>581</height>
      </rect>
     </property>
     <property name="title">
      <string>Settings</string>
     </property>
-    <widget class="QGroupBox" name="groupBox_components">
+    <widget class="QGroupBox" name="groupBox_layers">
      <property name="enabled">
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>100</y>
-       <width>101</width>
-       <height>91</height>
+       <width>111</width>
+       <height>111</height>
       </rect>
      </property>
      <property name="title">
-      <string>Components</string>
+      <string>Layers</string>
      </property>
-     <widget class="QRadioButton" name="oxCompRadioButton">
+     <widget class="QCheckBox" name="checkBox_ordinary">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>20</y>
-        <width>82</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>O + X</string>
-      </property>
-      <property name="checked">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="oCompRadioButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>82</width>
+        <width>81</width>
         <height>17</height>
        </rect>
       </property>
@@ -96,84 +80,43 @@
        <string>Ordinary</string>
       </property>
      </widget>
-     <widget class="QRadioButton" name="xCompRadioButton">
+     <widget class="QCheckBox" name="checkBox_extraordinary">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>40</y>
+        <width>91</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Extraordinary</string>
+      </property>
+     </widget>
+     <widget class="QCheckBox" name="checkBox_labeledOrdinary">
       <property name="geometry">
        <rect>
         <x>10</x>
         <y>60</y>
-        <width>91</width>
+        <width>81</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Extraordinary</string>
+       <string>Filtered O</string>
       </property>
      </widget>
-    </widget>
-    <widget class="QGroupBox" name="groupBox_labeled">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>200</y>
-       <width>101</width>
-       <height>141</height>
-      </rect>
-     </property>
-     <property name="title">
-      <string>Labeled</string>
-     </property>
-     <property name="checkable">
-      <bool>false</bool>
-     </property>
-     <widget class="QRadioButton" name="oFilterRadioButton">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
+     <widget class="QCheckBox" name="checkBox_labeledExtraordinary">
       <property name="geometry">
        <rect>
         <x>10</x>
-        <y>20</y>
-        <width>82</width>
+        <y>80</y>
+        <width>81</width>
         <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Ordinary</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QRadioButton" name="xFilterRadioButton">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>40</y>
-        <width>91</width>
-        <height>17</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Extraordinary</string>
-      </property>
-      <property name="checkable">
-       <bool>true</bool>
-      </property>
-     </widget>
-     <widget class="QDial" name="dial">
-      <property name="enabled">
-       <bool>false</bool>
-      </property>
-      <property name="geometry">
-       <rect>
-        <x>20</x>
-        <y>70</y>
-        <width>61</width>
-        <height>64</height>
-       </rect>
+       <string>Filtered X</string>
       </property>
      </widget>
     </widget>
@@ -182,7 +125,7 @@
       <rect>
        <x>10</x>
        <y>20</y>
-       <width>101</width>
+       <width>111</width>
        <height>71</height>
       </rect>
      </property>
@@ -224,6 +167,389 @@
        <bool>true</bool>
       </property>
      </widget>
+     <zorder>radioButton_whiteTheme</zorder>
+     <zorder>radioButton_blackTheme</zorder>
+     <zorder>groupBox_parameters</zorder>
+    </widget>
+   </widget>
+   <widget class="QGroupBox" name="groupBox_parameters">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>10</y>
+      <width>111</width>
+      <height>581</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Parameters</string>
+    </property>
+    <widget class="QLabel" name="label">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>fmin:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_fmin">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>20</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_2">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>60</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>foE:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_foe">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>60</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_foes">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>100</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_3">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>100</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>foEs:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_4">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>140</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>fbEs:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_fbes">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>140</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_5">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>180</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>fminF:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_fminf">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>180</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_fof1">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>220</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_fof2">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>260</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_fxi">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>300</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_he">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>340</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_hes">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>380</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_tpes">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>420</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_6">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>220</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>foF1:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_7">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>260</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>foF2:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_8">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>300</y>
+       <width>21</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>fxI:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_9">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>340</y>
+       <width>21</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>h'E:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_10">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>380</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>h'Es:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_11">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>420</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>tpEs:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_hf">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>460</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_12">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>460</y>
+       <width>21</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>h'F:</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_13">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>500</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>h'F2:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_hf2">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>500</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="label_14">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>540</y>
+       <width>41</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>M3000:</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_m3000">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>540</y>
+       <width>51</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="readOnly">
+      <bool>true</bool>
+     </property>
     </widget>
    </widget>
   </widget>
@@ -232,7 +558,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>931</width>
+     <width>1064</width>
      <height>21</height>
     </rect>
    </property>
@@ -241,11 +567,16 @@
      <string>File</string>
     </property>
     <addaction name="actionOpen_Ionogram"/>
+    <addaction name="separator"/>
+    <addaction name="actionExit"/>
    </widget>
    <widget class="QMenu" name="menuOptions">
     <property name="title">
-     <string>Options</string>
+     <string>Filter</string>
     </property>
+    <addaction name="actionHeight_range_filter"/>
+    <addaction name="actionFrequency_range_filter"/>
+    <addaction name="separator"/>
     <addaction name="actionCCL_filtering"/>
    </widget>
    <addaction name="menuFile"/>
@@ -259,6 +590,21 @@
   <action name="actionCCL_filtering">
    <property name="text">
     <string>CCL filtering</string>
+   </property>
+  </action>
+  <action name="actionHeight_range_filter">
+   <property name="text">
+    <string>Height range filter</string>
+   </property>
+  </action>
+  <action name="actionFrequency_range_filter">
+   <property name="text">
+    <string>Frequency range filter</string>
+   </property>
+  </action>
+  <action name="actionExit">
+   <property name="text">
+    <string>Exit</string>
    </property>
   </action>
  </widget>
