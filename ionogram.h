@@ -28,17 +28,22 @@ public:
     void Clear();
 
     std::vector< std::vector < Point > > ionogram;
+
 private:
     void ImportIonogram(std::string path);
     std::vector < Point > GetNullRow(int column);    
-    void GetLabelsCount(int layer, std::vector< int > &labels);
-    std::vector< int > GetLabelsCount(int layer);
+    void SetLabelsCount(int layer);
     void SetIsLabeled(int layer);
+
+    //test
+    std::vector< int > GetLabelsCount(int layer);
 
     int GetVirtualHeight(int h);
 
     bool ordComp, exordComp;
     ComponentLabeling componentLabeling;
+    std::vector< int > labelsCountOrd;
+    std::vector< int > labelsCountXOrd;
 
     static const int CC = 299792458;
     static const double deltaT = 0.000005;

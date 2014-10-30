@@ -91,30 +91,33 @@ void MainWindow::SetFilteredExtraordinaryDataScatter()
 
 void MainWindow::SetAllGraphEnabled(bool enabled)
 {
-    ui->widget->graph(0)->setVisible(enabled);
-    ui->widget->graph(1)->setVisible(enabled);
-    ui->widget->graph(2)->setVisible(enabled);
-    ui->widget->graph(3)->setVisible(enabled);
+    ui->checkBox_ordinary->setChecked(enabled);
+    ui->checkBox_extraordinary->setChecked(enabled);
+    ui->checkBox_labeledOrdinary->setChecked(enabled);
+    ui->checkBox_labeledExtraordinary->setChecked(enabled);
 }
 
 //black theme
 void MainWindow::SetDefaultXAxis()
 {
+    //axis label
     ui->widget->xAxis->setLabel("MHz");
     ui->widget->xAxis->setLabelColor(Qt::white);
-
-    ui->widget->xAxis->setAutoTicks(false);
+    //automatic tick
+    ui->widget->xAxis->setAutoTicks(true);
     ui->widget->xAxis->setAutoSubTicks(true);
-    ui->widget->xAxis->setAutoTickLabels(true);
-    ui->widget->xAxis->setTickLabels(true);
+    //automatic tick label
+    ui->widget->xAxis->setAutoTickLabels(false);
+    ui->widget->xAxis->setTickLabels(false);
+    //tick label color
     ui->widget->xAxis->setTickLabelColor(Qt::white);
 
-    QVector< double > vec;
+    /*QVector< double > vec;
     for (int i = 0; i < 19; ++i) {
         vec.push_back(i);
     }
     ui->widget->xAxis->setTickVector(vec);
-    ui->widget->xAxis->setRange(0, 18);
+    ui->widget->xAxis->setRange(0, 18);*/
 
     ui->widget->xAxis->setBasePen(QPen(Qt::white, 1));
     ui->widget->xAxis->setTickPen(QPen(Qt::white, 1));
@@ -126,21 +129,24 @@ void MainWindow::SetDefaultXAxis()
 
 void MainWindow::SetDefaultYAxis()
 {
+    //axis label
     ui->widget->yAxis->setLabel("Virtual Height");
     ui->widget->yAxis->setLabelColor(Qt::white);
-
-    ui->widget->yAxis->setAutoTicks(false);
-    ui->widget->yAxis->setAutoSubTicks(false);
-    ui->widget->yAxis->setAutoTickLabels(true);
-    ui->widget->yAxis->setTickLabels(true);
+    //automatic tick
+    ui->widget->yAxis->setAutoTicks(true);
+    ui->widget->yAxis->setAutoSubTicks(true);
+    //automatic tick label
+    ui->widget->yAxis->setAutoTickLabels(false);
+    ui->widget->yAxis->setTickLabels(false);
+    //tick label color
     ui->widget->yAxis->setTickLabelColor(Qt::white);
 
-    QVector< double > vec;
+   /* QVector< double > vec;
     for (int i = 0; i < 18; ++i) {
         vec.push_back(i * 50);
     }
     ui->widget->yAxis->setTickVector(vec);
-    ui->widget->yAxis->setRange(0, 800);
+    ui->widget->yAxis->setRange(0, 800);*/
 
     ui->widget->yAxis->setBasePen(QPen(Qt::white, 1));
     ui->widget->yAxis->setTickPen(QPen(Qt::white, 1));
@@ -215,8 +221,10 @@ void MainWindow::SetPlot()
     line2->start->setCoords(100, QCPRange::minRange);
     line2->end->setCoords(100, QCPRange::maxRange);*/
 
+    //zooming slot
     connect(ui->widget->xAxis, SIGNAL(rangeChanged(QCPRange)), this, SLOT(plotRangeChangedX(QCPRange)));
     connect(ui->widget->yAxis, SIGNAL(rangeChanged(QCPRange)), this, SLOT(plotRangeChangedY(QCPRange)));
+    //onclick slot
     connect(ui->widget, SIGNAL(mousePress(QMouseEvent*)), this, SLOT(onPlotClick(QMouseEvent*)));
 
     ui->widget->setInteractions(QCP::iRangeDrag | QCP::iRangeZoom );
@@ -243,14 +251,14 @@ void MainWindow::on_actionOpen_Ionogram_triggered()
     upperXRangeBound = ionogram.ionogram.size();
     upperYRangeBound = ionogram.ionogram[0].size();
 
-    QVector< double > v1, v2;
+    /*QVector< double > v1, v2;
     v1 = ionogram.GetXTickLabels();
     v2 = ionogram.GetYTickLabels();
 
     ui->widget->xAxis->setTickVector(v1);
     ui->widget->xAxis->setRange(0, v1[v1.length() - 1]);
     ui->widget->yAxis->setTickVector(v2);
-    ui->widget->yAxis->setRange(0, v2[v2.length() - 1]);
+    ui->widget->yAxis->setRange(0, v2[v2.length() - 1]);*/
 
     ui->widget->graph(0)->setData(ionogram.GetX(1), ionogram.GetY(1));
     ui->widget->graph(0)->rescaleAxes();
@@ -365,6 +373,16 @@ void MainWindow::on_checkBox_labeledExtraordinary_toggled(bool checked)
     ui->widget->replot();
 }
 
+void MainWindow::SetLabeledVisible(int labeled_layer)
+{
+    if (labeled_layer == 2) {
+        ui->checkBox_labeledOrdinary->setChecked(true);
+    } else if (labeled_layer == 3) {
+        ui->checkBox_labeledExtraordinary->setChecked(true);
+    }
+    ui->widget->replot();
+}
+
 //Filter menu, CCL filtering
 void MainWindow::on_actionCCL_filtering_triggered()
 {
@@ -378,18 +396,14 @@ void MainWindow::on_actionCCL_filtering_triggered()
         if (cclLabelingUi->exec() == QDialog::Accepted) {
             ionogram.ComponentLabelingFor(cclLabelingUi->GetComponentIndex());
 
-            //get filtered data
             QVector<double> x, y;
             x = ionogram.GetLabeledX(cclLabelingUi->GetComponentIndex(), cclLabelingUi->GetThreshold());
             y = ionogram.GetLabeledY(cclLabelingUi->GetComponentIndex(), cclLabelingUi->GetThreshold());
 
             SetAllGraphEnabled(false);
 
-            //set filtered data
             ui->widget->graph(cclLabelingUi->GetComponentIndex() + 1)->setData(x, y);
-            ui->widget->graph(cclLabelingUi->GetComponentIndex() + 1)->setVisible(true);
-            ui->widget->replot();
-
+            SetLabeledVisible(cclLabelingUi->GetComponentIndex() + 1);
         }
     }
 }

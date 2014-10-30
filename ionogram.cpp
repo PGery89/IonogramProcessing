@@ -2,6 +2,7 @@
 
 #include "ionogram.h"
 #include <sstream>
+#include <typeinfo>
 
 Ionogram::Ionogram()
 {
@@ -112,18 +113,10 @@ QVector< double > Ionogram::GetYTickLabels()
 
 void Ionogram::ComponentLabelingFor(int layer)
 {
-    if (layer == 0 || layer > 2) {
-        QMessageBox msg;
-        msg.setIcon(QMessageBox::Warning);
-        msg.setText("False attribute!");
-        msg.setInformativeText("Layer 1 and 2 can be filtered!");
-        msg.setStandardButtons(QMessageBox::Ok);
-        msg.exec();
-        return;
-    }
     if (!IsLabeled(layer)) {
         componentLabeling.ProcessImage(layer, & ionogram);
         SetIsLabeled(layer);
+        SetLabelsCount(layer);
     } else {
         QMessageBox msg;
         msg.setIcon(QMessageBox::Information);
@@ -145,15 +138,18 @@ std::vector < Point > Ionogram::GetNullRow(int column)
     return row;
 }
 
-//test version method
+/*test version method
 void Ionogram::GetLabelsCount(int layer, std::vector< int > &labels)
 {
-    int size = componentLabeling.ds.CountSets();
-    int labelsSize[size];
+    const int size = componentLabeling.ds.CountSets();
+    int * labelsSize(new int[size]);
 
-    for (unsigned int i = 1; i < ionogram.size() - 1; ++i) {
-        for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j)
-        {
+    unsigned int column = ionogram.size() - 1;
+    unsigned int row = ionogram[0].size() - 1;
+
+    for (unsigned int i = 1; i < column; ++i) {
+        for (unsigned int j = 1; j < row; ++j)
+        { 
             if (ionogram[i][j].Layer() == layer)
             {
                 int current = ionogram[i][j].GetLabel();
@@ -163,30 +159,58 @@ void Ionogram::GetLabelsCount(int layer, std::vector< int > &labels)
     }
 
     //CsvParser::VectorToCSV(ret, "labels");
+    //std::vector< int > ret(labelsSize, labelsSize + size);
+    //labels.swap(ret);
 
-    std::vector< int > ret(labelsSize, labelsSize + size);
+    labels.resize(size);
+    std::copy(labelsSize, labelsSize + size, labels.begin());
+    delete labelsSize;
+}*/
 
-    labels.swap(ret);    
+void Ionogram::SetLabelsCount(int layer)
+{
+    int size = componentLabeling.ds.CountSets();
+    std::vector< int > * labels;
+
+    if (layer == 1) {
+        labels = & labelsCountOrd;
+    } else if (layer == 2) {
+        labels = & labelsCountXOrd;
+    }
+
+    for (int var = 0; var < size; ++var) {
+        labels->push_back(0);
+    }
+
+    for (unsigned int i = 1; i < ionogram.size() - 1; ++i) {
+        for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j)
+        {
+            if (ionogram[i][j].Layer() == layer)
+            {
+                labels->operator [](ionogram[i][j].GetLabel()) += 1;
+                //labels[ionogram[i][j].GetLabel()] += 1;
+            }
+        }
+    }
+
+    //for (int var = 0; var < size; ++var) {
+    //    qDebug( )<< var << ". " << labels->operator [](var);
+    //}
 }
 
 std::vector< int > Ionogram::GetLabelsCount(int layer)
 {
     int size = componentLabeling.ds.CountSets();
-    std::vector< int > labels;
+    std::vector< int > labels(size, 0);
 
-    for (int l = 0; l < size; ++l)
-    {
-        int increment = 0;
-        for (unsigned int i = 1; i < ionogram.size() - 1; ++i) {
-            for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j)
+    for (unsigned int i = 1; i < ionogram.size() - 1; ++i) {
+        for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j)
+        {
+            if (ionogram[i][j].Layer() == layer)
             {
-                if (ionogram[i][j].Layer() == layer && ionogram[i][j].GetLabel() == l + 1)
-                {
-                    increment++;
-                }
+                labels[ionogram[i][j].GetLabel()] += 1;
             }
         }
-        labels.push_back(increment);
     }
 
     return labels;
@@ -195,21 +219,23 @@ std::vector< int > Ionogram::GetLabelsCount(int layer)
 QVector< double > Ionogram::GetLabeledX(int layer, int treshold)
 {
     QVector< double > x;
-    std::vector< int > labels = GetLabelsCount(layer);
+    std::vector< int > * labels;
 
-    /*std::vector< int > labels;
-    GetLabelsCount(layer, labels);*/
+    if (layer == 1) {
+        labels = & labelsCountOrd;
+    } else if (layer == 2) {
+        labels = & labelsCountXOrd;
+    }
 
-   // CsvParser::VectorToCSV(labels, "labels");
-
-    for (unsigned int k = 0; k < labels.size(); ++k) {
-        if (labels[k] >= treshold) {
+    for (unsigned int k = 0; k < labels->size(); ++k) {
+        if (labels->operator [](k) >= treshold) {
             for (unsigned int i = 1; i < ionogram.size() - 1; ++i)
             {
                 for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j)
                 {
-                    if (ionogram[i][j].Layer() == layer && ionogram[i][j].GetLabel() == k + 1)
+                    if (ionogram[i][j].Layer() == layer && ionogram[i][j].GetLabel() == k)
                     {
+
                         x.push_back(i);
                     }
                 }
@@ -223,19 +249,22 @@ QVector< double > Ionogram::GetLabeledX(int layer, int treshold)
 QVector< double > Ionogram::GetLabeledY(int layer, int treshold)
 {
     QVector< double > y;
-    std::vector< int > labels = GetLabelsCount(layer);
+    std::vector< int > * labels;
 
-    /*std::vector< int > labels;
-    GetLabelsCount(layer, labels);*/
+    if (layer == 1) {
+        labels = & labelsCountOrd;
+    } else if (layer == 2) {
+        labels = & labelsCountXOrd;
+    }
 
-    for (unsigned int k = 0; k < labels.size(); ++k) {
-        if (labels[k] >= treshold) {
+    for (unsigned int k = 0; k < labels->size(); ++k) {
+        if (labels->operator [](k) >= treshold) {
             for (unsigned int i = 1; i < ionogram.size() - 1; ++i)
             {
                 for (unsigned int j = 1; j < ionogram[i].size() - 1; ++j)
                 {
-                    if (ionogram[i][j].Layer() == layer && ionogram[i][j].GetLabel() == k + 1)
-                    {
+                    if (ionogram[i][j].Layer() == layer && ionogram[i][j].GetLabel() == k)
+                    {                       
                         y.push_back(j);
                     }
                 }

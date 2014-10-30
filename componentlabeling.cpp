@@ -34,8 +34,6 @@ std::vector< int > ComponentLabeling::GetAllNeighbors(int x, int y, int componen
         {
             bool isLayer = (*image)[i][j].Layer() == componentLayer;
 
-
-
             if (isLayer && (*image)[i][j].isLabeled())
             {
                 neighbors.push_back((*image)[i][j].GetLabel());
@@ -90,7 +88,6 @@ std::vector< int > ComponentLabeling::GetFastAllNeighbors(int x, int y, int comp
 
     return neighbors;
 }
-
 
 void ComponentLabeling::AssigningLabels(int componentLayer)
 {

@@ -38,6 +38,7 @@ public:
      void SetWhiteThemedXAxis();
      void SetWhiteThemedYAxis();
      void SetWhiteThemedBackgrounds();
+     void SetLabeledVisible(int labeled_layer);
 
      //bool eventFilter(QObject *target, QEvent *event);
 

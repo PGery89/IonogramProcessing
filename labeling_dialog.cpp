@@ -16,7 +16,6 @@ labeling_dialog::~labeling_dialog()
 
 void labeling_dialog::Init()
 {
-    ui->filteringProgressBar->setValue(50);
     component = ui->comboBox_components->currentIndex();
     threshold = 0;
 }

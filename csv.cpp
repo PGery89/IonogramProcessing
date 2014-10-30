@@ -48,10 +48,10 @@ void CsvParser::WriteCSV(std::vector< std::vector< Point > > ionogram, std::stri
             {
                 if (j != ionogram[i].size() - 1)
                 {
-                    out << ionogram[i][j].Layer() << separator;
+                    out << ionogram[i][j].GetLabel() << separator;
                 } else
                 {
-                    out << ionogram[i][j].Layer();
+                    out << ionogram[i][j].GetLabel();
                 }
             }
             out << '\n';
@@ -127,7 +127,7 @@ void CsvParser::StrToCsv(std::string _file, std::string st)
     file.close();
 }
 
-void CsvParser::VectorToCSV(std::vector< int > labels, string name)
+void CsvParser::VectorToCSV(std::vector<int> labels, string name)
 {
     std::string path = "d:\\" + name + ".csv";
     ofstream out(path.c_str());
@@ -140,6 +140,25 @@ void CsvParser::VectorToCSV(std::vector< int > labels, string name)
         {
             out << i << ". label size: "<< labels[i] << '\n';
         }*/
+    } else {
+        std::cout << "Unable to open." << endl;
+    }
+    out.close();
+}
+
+void CsvParser::VectorToCSV(std::vector<int> *labels, string name)
+{
+    std::string path = "d:\\" + name + ".csv";
+    ofstream out(path.c_str());
+
+    if (out.is_open()) {
+        /*for(std::vector< int >::const_iterator i = labels->begin(); i != labels->end(); ++i) {
+            out << "label size: " << *i << '\n';
+        }*/
+        for (unsigned int i = 0; i < labels->size(); ++i)
+        {
+            out << i << ". label size: "<< labels->operator [](i) << '\n';
+        }
     } else {
         std::cout << "Unable to open." << endl;
     }
